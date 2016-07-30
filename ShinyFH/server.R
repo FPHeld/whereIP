@@ -28,4 +28,16 @@ shinyServer(function(input, output) {
         }
   })
   
+  output$trendStates <- renderPlotly({ 
+  Pat_Time_State_Lines <- ggplot(
+    data = latest_AS3_data_clean, 
+    aes(x = Year, 
+        y=Nr_PatentApplicants, 
+        colour = State,
+        group = SA3_Name,
+        text = SA3_Name) ) +
+    geom_line(stat = "identity") 
+  ggplotly(Pat_Time_State_Lines, tooltip=c("y", "text"))
+  })
+  
 })

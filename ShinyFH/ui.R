@@ -22,7 +22,9 @@ shinyUI(navbarPage("Discover the Australia IP Landscape",
                                 sep=""),
                     checkboxInput("separate", "Do not cluster", FALSE)),
            
-           tabPanel("Time"),
+           tabPanel("States Trends",
+                    plotlyOutput("trendStates")
+                    ),
            tabPanel("Demographics")
 )
 )

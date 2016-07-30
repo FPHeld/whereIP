@@ -18,9 +18,9 @@ latest_AS3_data <- jsonlite::fromJSON(latest_AS3_data_loc)$result$records
 latest_AS3_data_clean <- latest_AS3_data %>% transmute(
   #Admin
   SA3_Name = SA3_Name,                                
-  Longitude = Longitude,
-  Latitude = Latitude, 
-  Year = Year,
+  Longitude = as.numeric(Longitude),
+  Latitude = as.numeric(Latitude), 
+  Year = as.numeric(Year),
   State = State,                                                        
   Remoteness = Remoteness,
   Population = EstimatedResidentPopulation,
