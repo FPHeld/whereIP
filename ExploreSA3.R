@@ -1,4 +1,4 @@
-packages <- c("dplyr", "htmlwidgets", "httr")
+packages <- c("dplyr", "htmlwidgets", "httr", "tidyr", "stringr")
 
 
 
@@ -47,23 +47,38 @@ latest_AS3_data_clean <- latest_AS3_data %>% transmute(
   Share_Ed_GDip = as.numeric(`GraduateDiplomaandGraduateCertificateLevel(total,2011)`)  / as.numeric(Population), 
   Share_Ed_Cert = as.numeric(`CertificateLevel(total,2011)`)  / as.numeric(Population), 
   #Businesses
-  Nr_Buis_Utilities = as.numeric(`Electricity,Gas,WaterandWasteServices(countofbusinesses)`),     
-  Nr_Buis_PublicAdmin = as.numeric(`PublicAdministrationandSafety(countofbusinesses)`),              
-  Nr_Buis_Education = as.numeric(`EducationandTraining(countofbusinesses)`),                       
-  Nr_Buis_Mining = as.numeric(`Mining(countofbusinesses)`),   
-  Nr_Buis_Tech = as.numeric(`Professional,ScientificandTechnicalServices(countofbusinesses)`),
-  Nr_Buis_Hospitality = as.numeric(`AccommodationandFoodServices(countofbusinesses)`), 
-  Nr_Buis_Arts = as.numeric(`ArtsandRecreationServices(countofbusinesses)`),                  
-  Nr_Buis_Construction = as.numeric(`Construction(countofbusinesses)`),                                                       
-  Nr_Buis_Retail = as.numeric(`RetailTrade(countofbusinesses)`),                                
-  Nr_Buis_Topindustry = as.numeric(`Topindustry(bycountofbusinesses)`), 
-  Nr_Buis_RealEstate = as.numeric(`Rental,HiringandRealEstateServices(countofbusinesses)`),   
-  Nr_Buis_Media = as.numeric(`InformationMediaandTelecommunications(countofbusinesses)`),      
-  Nr_Buis_Logisitcs = as.numeric(`Transport,PostalandWarehousing(countofbusinesses)`),
-  Nr_Buis_Admin = as.numeric(`AdministrativeandSupportServices(countofbusinesses)`),              
-  Nr_Buis_Agriculture = as.numeric(`Agriculture,ForestryandFishing(countofbusinesses)`),                              
-  Nr_Buis_Trade = as.numeric(`WholesaleTrade(countofbusinesses)`),                             
-  Nr_Buis_Finance = as.numeric(`FinancialandInsuranceServices(countofbusinesses)`),                                                  
-  Nr_Buis_Health = as.numeric(`HealthCareandSocialAssistance(countofbusinesses)`),              
-  Nr_Buis_Manufacture = as.numeric(`Manufacturing(countofbusinesses)`)
+  Nr_Busi_Utilities = as.numeric(`Electricity,Gas,WaterandWasteServices(countofbusinesses)`),     
+  Nr_Busi_PublicAdmin = as.numeric(`PublicAdministrationandSafety(countofbusinesses)`),              
+  Nr_Busi_Education = as.numeric(`EducationandTraining(countofbusinesses)`),                       
+  Nr_Busi_Mining = as.numeric(`Mining(countofbusinesses)`),   
+  Nr_Busi_Tech = as.numeric(`Professional,ScientificandTechnicalServices(countofbusinesses)`),
+  Nr_Busi_Hospitality = as.numeric(`AccommodationandFoodServices(countofbusinesses)`), 
+  Nr_Busi_Arts = as.numeric(`ArtsandRecreationServices(countofbusinesses)`),                  
+  Nr_Busi_Construction = as.numeric(`Construction(countofbusinesses)`),                                                       
+  Nr_Busi_Retail = as.numeric(`RetailTrade(countofbusinesses)`),                                
+  Nr_Busi_Topindustry = as.numeric(`Topindustry(bycountofbusinesses)`), 
+  Nr_Busi_RealEstate = as.numeric(`Rental,HiringandRealEstateServices(countofbusinesses)`),   
+  Nr_Busi_Media = as.numeric(`InformationMediaandTelecommunications(countofbusinesses)`),      
+  Nr_Busi_Logisitcs = as.numeric(`Transport,PostalandWarehousing(countofbusinesses)`),
+  Nr_Busi_Admin = as.numeric(`AdministrativeandSupportServices(countofbusinesses)`),              
+  Nr_Busi_Agriculture = as.numeric(`Agriculture,ForestryandFishing(countofbusinesses)`),                              
+  Nr_Busi_Trade = as.numeric(`WholesaleTrade(countofbusinesses)`),                             
+  Nr_Busi_Finance = as.numeric(`FinancialandInsuranceServices(countofbusinesses)`),                                                  
+  Nr_Busi_Health = as.numeric(`HealthCareandSocialAssistance(countofbusinesses)`),              
+  Nr_Busi_Manufacture = as.numeric(`Manufacturing(countofbusinesses)`)
   )
+
+latest_AS3_data_clean %>% 
+  select(SA3_Name, Year, contains("Nr_Busi")) %>%
+  gather(key, Nr_Busi, contains("Nr_Busi")) %>% 
+  mutate(Type=str_sub(key, 9, -1)) -> latest_AS3_data_BusiCount
+  
+latest_AS3_data_clean %>%
+    filter(Year==2011) %>%
+    select(SA3_Name, contains("Share_Ed")) %>%
+    gather(key, Share_Ed, contains("Share_Ed")) %>%
+    mutate(Education=str_sub(key, 9, -1)) -> latest_AS3_data_2011_EdLevel
+# 
+# #Education
+# Share_Labourforce = as.numeric(`Labourforce(total)`)  / as.numeric(Population),
+# Share_Unemployed = as.numeric(`Unemployed(total)`)  / as.numeric(Population),
