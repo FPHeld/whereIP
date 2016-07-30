@@ -10,21 +10,22 @@ for (i in packages){
 }
 
 IP_Class_Expl <- read_excel(file.path("rawdata","ipc_technology.xls"), sheet=1, skip=6) %>% 
-  select(Sector_en, IPC_code)
+  select(Field_en, IPC_code) %>% mutate(IPC_code = str_sub(IPC_code, 1, 4)) %>% unique()
 
-
-file.path("rawdata","IPGOLD27072016", "IPGOD.IPGOD104_PAT_IPC_CLASS.csv") %>%
+IP_Classes <- file.path("rawdata","IPGOLD27072016", "IPGOD.IPGOD104_PAT_IPC_CLASS.csv") %>%
   read_csv() %>% 
-  select(AUSTRALIAN_APPL_NO, IPC_MARK_VALUE) -> IP_Classes
+  select(AUSTRALIAN_APPL_NO, IPC_MARK_VALUE)
 
-IP_Classes %>% mutate(IPC_code = 
+IP_Classes %>% 
+  mutate(IPC_code = str_sub(IPC_MARK_VALUE, 1,4)) %>% 
+  left_join(IP_Class_Expl) -> IP_Classes
 
 file.path("rawdata","IPGOLD27072016", "IPGOD.IPGOD101_PAT_SUMMARY.csv") %>%
   read_csv(col_types = "ncncccccccnnn" ) %>%
   filter((application_date)!="") %>% 
   select(-application_date) ->  IP_Details
 
-
+IP_Details$status %>% table
 
 IP_Dates$application_year %>% table
 #IP_Applicants <- file.path("rawdata","IPGOLD27072016", "IPGOD.IPGOD102_PAT_APPLICANT.csv"))
