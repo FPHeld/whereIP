@@ -9,23 +9,31 @@ source("../ExploreSA3.R")
 shinyServer(function(input, output) {
    
   output$IPMap <- renderLeaflet({
-        ipgod_sel <- ipgod_cl %>% 
-                      filter( application_year >= min(input$yearrange), 
-                              application_year <= max(input$yearrange))
-        if(input$separate){
-        leaflet(data=ipgod_sel) %>% 
-          setView(lng = 145.209511, lat = -33, zoom = 3) %>% 
-          addCircles(~lon, ~lat, radius=1, #layerId=~zipcode,
-                     stroke=FALSE, 
-                     fillOpacity=0.4, 
-                     fillColor='blue') %>% 
-          addTiles()     
-        }else{
-        leaflet(data=ipgod_sel[,c('lat', 'lon')]) %>% 
-              addTiles() %>% 
-              setView(lng = 145.209511, lat = -33, zoom = 3) %>% 
-              addMarkers(clusterOptions = markerClusterOptions()) #%>% 
-        }
+    ipgod_sel <- IPGOD_data_all %>% 
+      filter( application_year >= min(input$yearrange), 
+              application_year <= max(input$yearrange))
+    ipgod_sel$status <- as.factor(ipgod_sel$status)
+    ipgod_sel_stat <- ipgod_sel %>% filter(status %in% input$statusinc)
+    if(!input$separate){
+      factpal <- colorFactor(brewer.pal(length(levels(ipgod_sel$status)),"Paired"), ipgod_sel$status)
+      #factpal <- colorFactor(topo.colors(length(levels(ipgod_sel$status))), ipgod_sel$status)
+      #ipgod_sel_stat <- ipgod_sel
+      leaflet(data=ipgod_sel_stat) %>% 
+        setView(lng = 145.209511, lat = -33, zoom = 3) %>% 
+        #color = ~ ifelse(Category == 'BRIBERY', 'red', 'blue')
+        addTiles() %>% 
+        addCircleMarkers(~lon, ~lat, radius=3, #layerId=~zipcode,
+                         stroke=FALSE, 
+                         fillOpacity=0.4, 
+                         #fillColor=~status, 
+                         color=~factpal(status)) %>% 
+        addLegend(pal = factpal, title="Status", values = ~ipgod_sel$status, opacity = 1)
+    }else{
+      leaflet(data=ipgod_sel_stat[,c('lat', 'lon')]) %>% 
+        addTiles() %>% 
+        setView(lng = 145.209511, lat = -33, zoom = 3) %>% 
+        addMarkers(clusterOptions = markerClusterOptions()) #%>% 
+    }
   })
   
   output$trendStates <- renderPlotly({ 
