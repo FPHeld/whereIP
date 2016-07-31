@@ -12,6 +12,7 @@ library("htmlwidgets")
 library("leaflet")
 library("pairsD3")
 library("plotly")
+library("RColorBrewer")
 
 shinyUI(navbarPage("Discover the Australia IP Landscape",
                    

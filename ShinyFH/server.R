@@ -1,11 +1,8 @@
 library(shiny)
-load('../Robjects/ipgodcl')  # replace this with a call to the API
-
+load('../working/IPGOD_data_all.RData') 
 library(dplyr)
-# Define server logic required to draw a histogram
-#sliderValues <- reactive({
 source("../ExploreSA3.R")      
-#}) 
+
 shinyServer(function(input, output) {
    
   output$IPMap <- renderLeaflet({
