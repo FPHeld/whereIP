@@ -94,3 +94,8 @@ latest_AS3_data_clean %>%
 # #Education
 # Share_Labourforce = as.numeric(`Labourforce(total)`)  / as.numeric(Population),
 # Share_Unemployed = as.numeric(`Unemployed(total)`)  / as.numeric(Population),
+
+
+latest_AS3_data_clean %>% 
+  select(Year, SA3_Name, State, Remoteness, Nr_NewBusine:Nr_NewBusines_per10k) -> AS3_data_for_Trends
+Trend_Y_choices <- names(AS3_data_for_Trends)[5:10]

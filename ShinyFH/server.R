@@ -30,13 +30,12 @@ shinyServer(function(input, output) {
   
   output$trendStates <- renderPlotly({ 
   Pat_Time_State_Lines <- ggplot(
-    data = latest_AS3_data_clean, 
-    aes(x = Year, 
-        y=Nr_PatentApplicants, 
+    data = filter(AS3_data_for_Trends, Remoteness %in% input$Trends_Remoteness) , 
+    aes(x = Year,  
         colour = State,
         group = SA3_Name,
         text = SA3_Name) ) +
-    geom_line(stat = "identity") 
+    geom_line(aes_string(y=input$Trends_Y)) 
   ggplotly(Pat_Time_State_Lines, tooltip=c("y", "text"))
   })
   

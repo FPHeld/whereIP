@@ -23,7 +23,28 @@ shinyUI(navbarPage("Discover the Australia IP Landscape",
                     checkboxInput("separate", "Do not cluster", FALSE)), #end tabpanel "Map"
            
            tabPanel("States Trends",
-                    plotlyOutput("trendStates")
+                    plotlyOutput("trendStates"),
+                    
+                    
+                    fluidRow(
+                      column(6,
+                      checkboxGroupInput('Trends_Remoteness', 'Select Remoteness Categories (filter):',
+                                          sort(unique(AS3_data_for_Trends$Remoteness)), 
+                                         selected = "Major Cities of Australia")      
+                      ),
+                      column(6,
+                      checkboxGroupInput('Trends_Y', 'Select Performance Measure (Y):',
+                                         Trend_Y_choices, 
+                                         selected = "Nr_PatentApplicants")
+                      )
+                    )  # end fluid row of input controls for Trends
+                    
+                    
+                    
+                    
+                    
+                   
+
                     ), #end tabpanel "State Trends"
            tabPanel("Demographics"
                     ) #end tabpanel "Demographics"
