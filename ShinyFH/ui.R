@@ -19,15 +19,47 @@ shinyUI(navbarPage("Discover the Australia IP Landscape",
              includeHTML("../WelcomePage.html")
                      ),
             
-           tabPanel("Map",
-                    leafletOutput("IPMap"),
-                    sliderInput(inputId="yearrange",
-                                label="Year range",
-                                min=2003, max=2015, 
-                                value=c(2005, 2010),
-                                sep=""),
-                    checkboxInput("separate", "Do not cluster", FALSE)), #end tabpanel "Map"
-           
+          tabPanel("Map",
+                   leafletOutput("IPMap"),
+                   fluidRow(#tweaks,
+                     column(4,
+                            sliderInput(inputId="yearrange",
+                                        label="Year range",
+                                        min=2003, max=2015, 
+                                        value=c(2005, 2010),
+                                        sep=""),
+                            checkboxInput("separate", "Cluster", FALSE)),
+                     column(4,
+                            # selectInput("statusinc", "Select status", 
+                            #             c("Accepted", "Ceased", "Certified",
+                            #               "Expired", "Filed", "Lapsed", "Refused",
+                            #               "Revoked", "Sealed", "Withdrawn"),
+                            #             #levels(ipgod_sel$status), 
+                            #             selected = "all", 
+                            #             multiple = TRUE)
+                            #list("", 
+                            #     tags$div(align = 'left', 
+                            #              class = 'multicol', 
+                            checkboxGroupInput("statusinc", label = "Select status",
+                                               choices = list("Accepted"="Accepted", 
+                                                              "Ceased"="Ceased",
+                                                              "Certified"="Certified",
+                                                              "Expired"="Expired",
+                                                              "Filed"="Filed",
+                                                              "Lapsed"="Lapsed",
+                                                              "Refused"="Refused",
+                                                              "Revoked"="Revoked",
+                                                              "Sealed"="Sealed",
+                                                              "Withdrawn"="Withdrawn"),
+                                               selected = c("Accepted", "Ceased", "Certified",
+                                                            "Expired", "Filed", "Lapsed", 
+                                                            "Refused", "Revoked", "Sealed",
+                                                            "Withdrawn")#,
+                                               #inline=TRUE
+                                               #))
+                            ))
+                   ) # end fluidRow
+          ), #end tabpanel "Map"   
            tabPanel("Trends",
                     plotlyOutput("trendStates", width = "95%", height = "700px"),
                     
