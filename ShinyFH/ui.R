@@ -16,7 +16,7 @@ library("plotly")
 shinyUI(navbarPage("Discover the Australia IP Landscape",
                    
           tabPanel("Home",
-             includeHTML("WelcomePage.html")
+             includeHTML("../WelcomePage.html")
                      ),
             
            tabPanel("Map",
