@@ -1,0 +1,1 @@
+rmarkdown::render("WelcomePage.Rmd", output_format="html_document", output_file= "WelcomePage.html")

@@ -38,5 +38,18 @@ shinyServer(function(input, output) {
     geom_line(aes_string(y=input$Trends_Y)) 
   ggplotly(Pat_Time_State_Lines, tooltip=c("y", "text"))
   })
+
+  output$Demo_Grid <- renderPlotly({ 
+      big_plot_BusiDEmPerfDem <- ggplot(latest_AS3_data_BusiDEmPerf %>% 
+                                          filter( Education %in% input$Dems_Edu, Type %in% input$Dems_Busi ) %>%
+                                          filter(Year == input$Dems_Year), 
+                                        aes(x=Nr_Busi, 
+                                            y=Share_Ed, 
+                                            text=SA3_Name,
+                                            color=State) ) + 
+        facet_grid(Type ~ Education) + 
+        geom_point(aes_string(size=input$Dems_Size))    
+    ggplotly(big_plot_BusiDEmPerfDem, tooltip=c("x", "y", "size", "text"))
+  })
   
 })

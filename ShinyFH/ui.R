@@ -7,12 +7,18 @@
 #    http://shiny.rstudio.com/
 #
 
-library(shiny)
-library(htmlwidgets)
-library(leaflet)
+library("shiny")
+library("htmlwidgets")
+library("leaflet")
 library("pairsD3")
+library("plotly")
 
 shinyUI(navbarPage("Discover the Australia IP Landscape",
+                   
+          tabPanel("Home",
+             includeMarkdown("WelcomePage.md")
+                     ),
+            
            tabPanel("Map",
                     leafletOutput("IPMap"),
                     sliderInput(inputId="yearrange",
@@ -22,8 +28,8 @@ shinyUI(navbarPage("Discover the Australia IP Landscape",
                                 sep=""),
                     checkboxInput("separate", "Do not cluster", FALSE)), #end tabpanel "Map"
            
-           tabPanel("States Trends",
-                    plotlyOutput("trendStates"),
+           tabPanel("Trends",
+                    plotlyOutput("trendStates", width = "95%", height = "700px"),
                     
                     
                     fluidRow(
@@ -46,8 +52,39 @@ shinyUI(navbarPage("Discover the Australia IP Landscape",
                    
 
                     ), #end tabpanel "State Trends"
-           tabPanel("Demographics"
-                    ) #end tabpanel "Demographics"
+           tabPanel("Capabilities",
+                    fluidRow(
+                      column(6,
+                        selectInput('Dems_Size', 
+                                    'Select Performance Measure (Y):',
+                                    Trend_Y_choices, 
+                                    selected = "Nr_PatentApplicants")
+                        ),
+                      column(6,             
+                        selectInput('Dems_Year', 
+                                    'Which Year?:',
+                                    sort(unique(latest_AS3_data_BusiDEmPerf$Year)), 
+                                    selected = 2011)
+                        )
+                      ), # end top fluid row
+
+                    plotlyOutput("Demo_Grid", width = "95%", height = "700px"),
+                    
+                    fluidRow(
+                      column(6,
+                             checkboxGroupInput('Dems_Busi', 'Show Number of Local Businesses of Types:',
+                                                sort(unique(latest_AS3_data_BusiDEmPerf$Type)), 
+                                                selected = c("Education","Finance","Health"),
+                                                inline = TRUE)      
+                      ),
+                      column(4,
+                             checkboxGroupInput('Dems_Edu', 
+                                                label='Show Highest Level Qualification Level in Population:',
+                                                choices=sort(unique(latest_AS3_data_BusiDEmPerf$Education)), 
+                                                selected = c("Bachelor", "PG"))
+                      )
+                    ) ## end fluid row
+                   ) #end tabpanel "Demographics"
 )
 )
 
