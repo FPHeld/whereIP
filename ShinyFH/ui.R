@@ -20,12 +20,13 @@ shinyUI(navbarPage("Discover the Australia IP Landscape",
                                 min=2003, max=2015, 
                                 value=c(2005, 2010),
                                 sep=""),
-                    checkboxInput("separate", "Do not cluster", FALSE)),
+                    checkboxInput("separate", "Do not cluster", FALSE)), #end tabpanel "Map"
            
            tabPanel("States Trends",
                     plotlyOutput("trendStates")
-                    ),
-           tabPanel("Demographics")
+                    ), #end tabpanel "State Trends"
+           tabPanel("Demographics"
+                    ) #end tabpanel "Demographics"
 )
 )
 

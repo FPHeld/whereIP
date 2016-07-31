@@ -20,6 +20,8 @@ IP_Classes %>%
   mutate(IPC_code = str_sub(IPC_MARK_VALUE, 1,4)) %>% 
   left_join(IP_Class_Expl) -> IP_Classes
 
+names(IP_Classes) <- tolower(names(IP_Classes))
+
 rm(list="IP_Class_Expl")
 
 file.path("rawdata","IPGOLD27072016", "IPGOD.IPGOD101_PAT_SUMMARY.csv") %>%
@@ -27,8 +29,14 @@ file.path("rawdata","IPGOLD27072016", "IPGOD.IPGOD101_PAT_SUMMARY.csv") %>%
   filter((application_date)!="") %>% 
   select(-application_date) ->  IP_Details
 
+
+
 file.path("rawdata","IPGOLD27072016", "IPGOD.IPGOD102_PAT_APPLICANT.csv") %>% 
   read_csv %>% 
   select (australian_appl_no, appln_type, cleanname, entity, lat, lon) ->  IP_Applicants
 
+IP_Details %>% left_join(IP_Classes) -> IPGOD_data
+IP_Applicants %>% left_join(IPGOD_data, by=c("australian_appl_no"="australian_appl_no")) %>%
+  filter(!is.na(application_year), !is.na(lat))-> IPGOD_data_all
 
+save(IPGOD_data_all, file=file.path("working", "IPGOD_data_all.RData"))
