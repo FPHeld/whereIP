@@ -1,7 +1,7 @@
 library(shiny)
-load('../working/IPGOD_data_all.RData') 
 library(dplyr)
 source("../ExploreSA3.R")      
+load('../working/IPGOD_data_all.RData') 
 
 shinyServer(function(input, output) {
    
@@ -11,6 +11,8 @@ shinyServer(function(input, output) {
               application_year <= max(input$yearrange))
     ipgod_sel$status <- as.factor(ipgod_sel$status)
     ipgod_sel_stat <- ipgod_sel %>% filter(status %in% input$statusinc)
+    ipgod_sel_stat <- ipgod_sel_stat %>% filter(field_en %in% input$IPC8_Cat)
+    #ipgod_sel_stat <- ipgod_sel_stat %>% filter(field_en =="Biotechnology")
     if(!input$separate){
       factpal <- colorFactor(brewer.pal(length(levels(ipgod_sel$status)),"Paired"), ipgod_sel$status)
       #factpal <- colorFactor(topo.colors(length(levels(ipgod_sel$status))), ipgod_sel$status)

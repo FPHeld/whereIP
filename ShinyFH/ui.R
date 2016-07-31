@@ -14,13 +14,23 @@ library("pairsD3")
 library("plotly")
 library("RColorBrewer")
 
+#load('../working/IPGOD_data_all.RData') 
+#IP_Categories <- sort(unique(IPGOD_data_all$field_en))
+load("../working/IP_Categories.RData")
+# source("../ExploreSA3.R")   
+
 shinyUI(navbarPage("Discover the Australia IP Landscape",
-                   
           tabPanel("Home",
              includeHTML("../WelcomePage.html")
                      ),
-            
           tabPanel("Map",
+                   checkboxGroupInput("IPC8_Cat", 
+                                      label = "Select IPC Category", 
+                                      choices=IP_Categories,
+                                      selected=c("Analysis of biological materials",
+                                                 "Biotechnology"),
+                                      inline = TRUE
+                                      ),
                    leafletOutput("IPMap"),
                    fluidRow(#tweaks,
                      column(4,
@@ -28,20 +38,11 @@ shinyUI(navbarPage("Discover the Australia IP Landscape",
                                         label="Year range",
                                         min=2003, max=2015, 
                                         value=c(2005, 2010),
-                                        sep=""),
-                            checkboxInput("separate", "Cluster", FALSE)),
+                                        sep="")
+                            ),
                      column(4,
-                            # selectInput("statusinc", "Select status", 
-                            #             c("Accepted", "Ceased", "Certified",
-                            #               "Expired", "Filed", "Lapsed", "Refused",
-                            #               "Revoked", "Sealed", "Withdrawn"),
-                            #             #levels(ipgod_sel$status), 
-                            #             selected = "all", 
-                            #             multiple = TRUE)
-                            #list("", 
-                            #     tags$div(align = 'left', 
-                            #              class = 'multicol', 
-                            checkboxGroupInput("statusinc", label = "Select status",
+                            checkboxGroupInput("statusinc", 
+                                               label = "Select status",
                                                choices = list("Accepted"="Accepted", 
                                                               "Ceased"="Ceased",
                                                               "Certified"="Certified",
@@ -55,16 +56,19 @@ shinyUI(navbarPage("Discover the Australia IP Landscape",
                                                selected = c("Accepted", "Ceased", "Certified",
                                                             "Expired", "Filed", "Lapsed", 
                                                             "Refused", "Revoked", "Sealed",
-                                                            "Withdrawn")#,
-                                               #inline=TRUE
+                                                            "Withdrawn"),
+                                               inline=TRUE
                                                #))
-                            ))
+                            )),
+                     column(2, 
+                            checkboxInput("separate", 
+                                          label="Cluster", 
+                                          value=FALSE)
+                            )
                    ) # end fluidRow
           ), #end tabpanel "Map"   
            tabPanel("Trends",
                     plotlyOutput("trendStates", width = "95%", height = "700px"),
-                    
-                    
                     fluidRow(
                       column(6,
                       checkboxGroupInput('Trends_Remoteness', 'Select Remoteness Categories (filter):',
@@ -78,13 +82,7 @@ shinyUI(navbarPage("Discover the Australia IP Landscape",
                       )
                     )  # end fluid row of input controls for Trends
                     
-                    
-                    
-                    
-                    
-                   
-
-                    ), #end tabpanel "State Trends"
+                    ), #end tabpanel "Trends"
            tabPanel("Capabilities",
                     fluidRow(
                       column(6,
@@ -117,7 +115,7 @@ shinyUI(navbarPage("Discover the Australia IP Landscape",
                                                 selected = c("Bachelor", "PG"))
                       )
                     ) ## end fluid row
-                   ) #end tabpanel "Demographics"
+                   ) #end tabpanel "Capabilities"
 )
 )
 
