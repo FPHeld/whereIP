@@ -77,7 +77,19 @@ latest_AS3_data_clean %>%
     filter(Year==2011) %>%
     select(SA3_Name, contains("Share_Ed")) %>%
     gather(key, Share_Ed, contains("Share_Ed")) %>%
-    mutate(Education=str_sub(key, 9, -1)) -> latest_AS3_data_2011_EdLevel
+    mutate(Education=str_sub(key, 10, -1)) -> latest_AS3_data_2011_EdLevel
+
+
+latest_AS3_data_clean %>%
+  select( SA3_Name, Year, Nr_NewBusine, Nr_TM_Applicants, Nr_PatentApplicants, 
+          Nr_Patents_per10k, Nr_TM_Applicants_per10k, Nr_NewBusines_per10k) %>%
+  left_join(latest_AS3_data_2011_EdLevel, 
+            by=c("SA3_Name"="SA3_Name")) %>%
+  left_join(latest_AS3_data_BusiCount, 
+            by=c("SA3_Name"="SA3_Name", 
+                 "Year"="Year") ) %>%
+  select(-key.x, -key.y) -> latest_AS3_data_BusiDEmPerf
+    
 # 
 # #Education
 # Share_Labourforce = as.numeric(`Labourforce(total)`)  / as.numeric(Population),
